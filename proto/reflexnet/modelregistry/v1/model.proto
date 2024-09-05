@@ -1,0 +1,55 @@
+syntax = "proto3";
+package reflexnet.modelregistry.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/modelregistry/types";
+
+// Model represents a registered AI model in the system.
+message Model {
+  // id is the unique identifier for the model.
+  uint64 id = 1;
+  
+  // owner is the address of the model owner.
+  string owner = 2;
+  
+  // name is the human-readable name of the model.
+  string name = 3;
+  
+  // metadata_cid is the IPFS/Arweave CID of the model metadata.
+  string metadata_cid = 4;
+  
+  // shard_count is the number of shards the model is split into.
+  uint32 shard_count = 5;
+  
+  // version is the current version of the model.
+  string version = 6;
+  
+  // created_at is the block height when the model was registered.
+  int64 created_at = 7;
+  
+  // updated_at is the block height when the model was last updated.
+  int64 updated_at = 8;
+  
+  // status indicates the current status of the model.
+  ModelStatus status = 9;
+  
+  // inference_count tracks the total number of inferences performed.
+  uint64 inference_count = 10;
+}
+
+// ModelStatus defines the status of a model.
+enum ModelStatus {
+  // MODEL_STATUS_UNSPECIFIED is the default status.
+  MODEL_STATUS_UNSPECIFIED = 0;
+  
+  // MODEL_STATUS_ACTIVE indicates the model is active and available.
+  MODEL_STATUS_ACTIVE = 1;
+  
+  // MODEL_STATUS_INACTIVE indicates the model is temporarily inactive.
+  MODEL_STATUS_INACTIVE = 2;
+  
+  // MODEL_STATUS_DEPRECATED indicates the model is deprecated.
+  MODEL_STATUS_DEPRECATED = 3;
+}
+

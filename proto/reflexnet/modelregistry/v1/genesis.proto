@@ -1,0 +1,35 @@
+syntax = "proto3";
+package reflexnet.modelregistry.v1;
+
+import "gogoproto/gogo.proto";
+import "reflexnet/modelregistry/v1/model.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/modelregistry/types";
+
+// GenesisState defines the modelregistry module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [(gogoproto.nullable) = false];
+  
+  // models is a list of all registered models.
+  repeated Model models = 2 [(gogoproto.nullable) = false];
+  
+  // next_model_id is the ID to be assigned to the next registered model.
+  uint64 next_model_id = 3;
+}
+
+// Params defines the parameters for the modelregistry module.
+message Params {
+  // registration_fee is the fee required to register a new model.
+  string registration_fee = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // max_metadata_size is the maximum size of model metadata in bytes.
+  uint64 max_metadata_size = 2;
+  
+  // max_shard_count is the maximum number of shards a model can have.
+  uint32 max_shard_count = 3;
+}
+

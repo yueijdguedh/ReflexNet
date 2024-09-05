@@ -1,0 +1,75 @@
+syntax = "proto3";
+package reflexnet.modelregistry.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "reflexnet/modelregistry/v1/model.proto";
+import "reflexnet/modelregistry/v1/genesis.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/modelregistry/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/reflexnet/modelregistry/v1/params";
+  }
+  
+  // Model queries a model by ID.
+  rpc Model(QueryModelRequest) returns (QueryModelResponse) {
+    option (google.api.http).get = "/reflexnet/modelregistry/v1/models/{model_id}";
+  }
+  
+  // Models queries all models with pagination.
+  rpc Models(QueryModelsRequest) returns (QueryModelsResponse) {
+    option (google.api.http).get = "/reflexnet/modelregistry/v1/models";
+  }
+  
+  // ModelsByOwner queries all models owned by a specific address.
+  rpc ModelsByOwner(QueryModelsByOwnerRequest) returns (QueryModelsByOwnerResponse) {
+    option (google.api.http).get = "/reflexnet/modelregistry/v1/models/owner/{owner}";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryModelRequest is the request type for the Query/Model RPC method.
+message QueryModelRequest {
+  uint64 model_id = 1;
+}
+
+// QueryModelResponse is the response type for the Query/Model RPC method.
+message QueryModelResponse {
+  Model model = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryModelsRequest is the request type for the Query/Models RPC method.
+message QueryModelsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryModelsResponse is the response type for the Query/Models RPC method.
+message QueryModelsResponse {
+  repeated Model models = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryModelsByOwnerRequest is the request type for the Query/ModelsByOwner RPC method.
+message QueryModelsByOwnerRequest {
+  string owner = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryModelsByOwnerResponse is the response type for the Query/ModelsByOwner RPC method.
+message QueryModelsByOwnerResponse {
+  repeated Model models = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+

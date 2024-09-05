@@ -1,0 +1,64 @@
+syntax = "proto3";
+package reflexnet.modelregistry.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/msg/v1/msg.proto";
+import "reflexnet/modelregistry/v1/model.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/modelregistry/types";
+
+// Msg defines the modelregistry Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  
+  // RegisterModel registers a new AI model.
+  rpc RegisterModel(MsgRegisterModel) returns (MsgRegisterModelResponse);
+  
+  // UpdateModelVersion updates the version of an existing model.
+  rpc UpdateModelVersion(MsgUpdateModelVersion) returns (MsgUpdateModelVersionResponse);
+  
+  // UpdateModelStatus updates the status of a model.
+  rpc UpdateModelStatus(MsgUpdateModelStatus) returns (MsgUpdateModelStatusResponse);
+}
+
+// MsgRegisterModel is the message to register a new model.
+message MsgRegisterModel {
+  option (cosmos.msg.v1.signer) = "owner";
+  
+  string owner = 1;
+  string name = 2;
+  string metadata_cid = 3;
+  uint32 shard_count = 4;
+  string version = 5;
+}
+
+// MsgRegisterModelResponse is the response for MsgRegisterModel.
+message MsgRegisterModelResponse {
+  uint64 model_id = 1;
+}
+
+// MsgUpdateModelVersion is the message to update a model's version.
+message MsgUpdateModelVersion {
+  option (cosmos.msg.v1.signer) = "owner";
+  
+  string owner = 1;
+  uint64 model_id = 2;
+  string new_version = 3;
+  string new_metadata_cid = 4;
+}
+
+// MsgUpdateModelVersionResponse is the response for MsgUpdateModelVersion.
+message MsgUpdateModelVersionResponse {}
+
+// MsgUpdateModelStatus is the message to update a model's status.
+message MsgUpdateModelStatus {
+  option (cosmos.msg.v1.signer) = "owner";
+  
+  string owner = 1;
+  uint64 model_id = 2;
+  ModelStatus new_status = 3;
+}
+
+// MsgUpdateModelStatusResponse is the response for MsgUpdateModelStatus.
+message MsgUpdateModelStatusResponse {}
+
