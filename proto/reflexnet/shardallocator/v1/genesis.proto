@@ -1,0 +1,38 @@
+syntax = "proto3";
+package reflexnet.shardallocator.v1;
+
+import "gogoproto/gogo.proto";
+import "reflexnet/shardallocator/v1/shard.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/shardallocator/types";
+
+// GenesisState defines the shardallocator module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [(gogoproto.nullable) = false];
+  
+  // shard_assignments is a list of all shard assignments.
+  repeated ShardAssignment shard_assignments = 2 [(gogoproto.nullable) = false];
+  
+  // node_infos is a list of all registered nodes.
+  repeated NodeInfo node_infos = 3 [(gogoproto.nullable) = false];
+}
+
+// Params defines the parameters for the shardallocator module.
+message Params {
+  // min_stake_amount is the minimum stake required to become a shard node.
+  string min_stake_amount = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // max_shards_per_node is the maximum number of shards a single node can hold.
+  uint32 max_shards_per_node = 2;
+  
+  // health_check_interval is the number of blocks between health checks.
+  int64 health_check_interval = 3;
+  
+  // min_reputation_score is the minimum reputation score to remain active.
+  int64 min_reputation_score = 4;
+}
+

@@ -1,0 +1,91 @@
+syntax = "proto3";
+package reflexnet.shardallocator.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "reflexnet/shardallocator/v1/shard.proto";
+import "reflexnet/shardallocator/v1/genesis.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/shardallocator/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/reflexnet/shardallocator/v1/params";
+  }
+  
+  // ShardAssignment queries a shard assignment.
+  rpc ShardAssignment(QueryShardAssignmentRequest) returns (QueryShardAssignmentResponse) {
+    option (google.api.http).get = "/reflexnet/shardallocator/v1/assignments/{model_id}/{shard_index}";
+  }
+  
+  // ShardAssignmentsByModel queries all shard assignments for a model.
+  rpc ShardAssignmentsByModel(QueryShardAssignmentsByModelRequest) returns (QueryShardAssignmentsByModelResponse) {
+    option (google.api.http).get = "/reflexnet/shardallocator/v1/assignments/model/{model_id}";
+  }
+  
+  // NodeInfo queries information about a node.
+  rpc NodeInfo(QueryNodeInfoRequest) returns (QueryNodeInfoResponse) {
+    option (google.api.http).get = "/reflexnet/shardallocator/v1/nodes/{node_address}";
+  }
+  
+  // AllNodes queries all registered nodes.
+  rpc AllNodes(QueryAllNodesRequest) returns (QueryAllNodesResponse) {
+    option (google.api.http).get = "/reflexnet/shardallocator/v1/nodes";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryShardAssignmentRequest is the request type for the Query/ShardAssignment RPC method.
+message QueryShardAssignmentRequest {
+  uint64 model_id = 1;
+  uint32 shard_index = 2;
+}
+
+// QueryShardAssignmentResponse is the response type for the Query/ShardAssignment RPC method.
+message QueryShardAssignmentResponse {
+  ShardAssignment assignment = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryShardAssignmentsByModelRequest is the request type for the Query/ShardAssignmentsByModel RPC method.
+message QueryShardAssignmentsByModelRequest {
+  uint64 model_id = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryShardAssignmentsByModelResponse is the response type for the Query/ShardAssignmentsByModel RPC method.
+message QueryShardAssignmentsByModelResponse {
+  repeated ShardAssignment assignments = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryNodeInfoRequest is the request type for the Query/NodeInfo RPC method.
+message QueryNodeInfoRequest {
+  string node_address = 1;
+}
+
+// QueryNodeInfoResponse is the response type for the Query/NodeInfo RPC method.
+message QueryNodeInfoResponse {
+  NodeInfo node_info = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllNodesRequest is the request type for the Query/AllNodes RPC method.
+message QueryAllNodesRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllNodesResponse is the response type for the Query/AllNodes RPC method.
+message QueryAllNodesResponse {
+  repeated NodeInfo nodes = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+

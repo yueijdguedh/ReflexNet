@@ -1,0 +1,73 @@
+syntax = "proto3";
+package reflexnet.shardallocator.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/shardallocator/types";
+
+// ShardAssignment represents the assignment of a model shard to a node.
+message ShardAssignment {
+  // model_id is the ID of the model.
+  uint64 model_id = 1;
+  
+  // shard_index is the index of the shard (0-based).
+  uint32 shard_index = 2;
+  
+  // node_address is the address of the node holding this shard.
+  string node_address = 3;
+  
+  // assigned_at is the block height when the shard was assigned.
+  int64 assigned_at = 4;
+  
+  // last_health_check is the last time the shard was verified to be available.
+  int64 last_health_check = 5;
+  
+  // reputation_score is the node's reputation score for this shard.
+  int64 reputation_score = 6;
+}
+
+// NodeInfo represents information about a shard node.
+message NodeInfo {
+  // address is the node's address.
+  string address = 1;
+  
+  // staked_amount is the amount of tokens staked by the node.
+  string staked_amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // total_shards is the number of shards assigned to this node.
+  uint32 total_shards = 3;
+  
+  // uptime_percentage is the node's uptime percentage.
+  string uptime_percentage = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  
+  // reputation_score is the overall reputation score.
+  int64 reputation_score = 5;
+  
+  // status indicates whether the node is active.
+  NodeStatus status = 6;
+  
+  // registered_at is the block height when the node registered.
+  int64 registered_at = 7;
+}
+
+// NodeStatus defines the status of a shard node.
+enum NodeStatus {
+  // NODE_STATUS_UNSPECIFIED is the default status.
+  NODE_STATUS_UNSPECIFIED = 0;
+  
+  // NODE_STATUS_ACTIVE indicates the node is active.
+  NODE_STATUS_ACTIVE = 1;
+  
+  // NODE_STATUS_INACTIVE indicates the node is inactive.
+  NODE_STATUS_INACTIVE = 2;
+  
+  // NODE_STATUS_SLASHED indicates the node has been slashed.
+  NODE_STATUS_SLASHED = 3;
+}
+

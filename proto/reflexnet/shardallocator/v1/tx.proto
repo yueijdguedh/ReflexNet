@@ -1,0 +1,89 @@
+syntax = "proto3";
+package reflexnet.shardallocator.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/shardallocator/types";
+
+// Msg defines the shardallocator Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  
+  // RegisterNode registers a new shard node.
+  rpc RegisterNode(MsgRegisterNode) returns (MsgRegisterNodeResponse);
+  
+  // UnregisterNode unregisters a shard node.
+  rpc UnregisterNode(MsgUnregisterNode) returns (MsgUnregisterNodeResponse);
+  
+  // AssignShard assigns a shard to a node.
+  rpc AssignShard(MsgAssignShard) returns (MsgAssignShardResponse);
+  
+  // ReplaceShard replaces a shard assignment.
+  rpc ReplaceShard(MsgReplaceShard) returns (MsgReplaceShardResponse);
+  
+  // UpdateNodeStatus updates the status of a node.
+  rpc UpdateNodeStatus(MsgUpdateNodeStatus) returns (MsgUpdateNodeStatusResponse);
+}
+
+// MsgRegisterNode is the message to register a new shard node.
+message MsgRegisterNode {
+  option (cosmos.msg.v1.signer) = "node_address";
+  
+  string node_address = 1;
+  cosmos.base.v1beta1.Coin stake_amount = 2 [(gogoproto.nullable) = false];
+}
+
+// MsgRegisterNodeResponse is the response for MsgRegisterNode.
+message MsgRegisterNodeResponse {}
+
+// MsgUnregisterNode is the message to unregister a shard node.
+message MsgUnregisterNode {
+  option (cosmos.msg.v1.signer) = "node_address";
+  
+  string node_address = 1;
+}
+
+// MsgUnregisterNodeResponse is the response for MsgUnregisterNode.
+message MsgUnregisterNodeResponse {}
+
+// MsgAssignShard is the message to assign a shard to a node.
+message MsgAssignShard {
+  option (cosmos.msg.v1.signer) = "authority";
+  
+  string authority = 1;
+  uint64 model_id = 2;
+  uint32 shard_index = 3;
+  string node_address = 4;
+}
+
+// MsgAssignShardResponse is the response for MsgAssignShard.
+message MsgAssignShardResponse {}
+
+// MsgReplaceShard is the message to replace a shard assignment.
+message MsgReplaceShard {
+  option (cosmos.msg.v1.signer) = "authority";
+  
+  string authority = 1;
+  uint64 model_id = 2;
+  uint32 shard_index = 3;
+  string old_node_address = 4;
+  string new_node_address = 5;
+}
+
+// MsgReplaceShardResponse is the response for MsgReplaceShard.
+message MsgReplaceShardResponse {}
+
+// MsgUpdateNodeStatus is the message to update node status.
+message MsgUpdateNodeStatus {
+  option (cosmos.msg.v1.signer) = "authority";
+  
+  string authority = 1;
+  string node_address = 2;
+  string new_status = 3;
+}
+
+// MsgUpdateNodeStatusResponse is the response for MsgUpdateNodeStatus.
+message MsgUpdateNodeStatusResponse {}
+
