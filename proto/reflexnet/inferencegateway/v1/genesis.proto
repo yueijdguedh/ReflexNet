@@ -1,0 +1,35 @@
+syntax = "proto3";
+package reflexnet.inferencegateway.v1;
+
+import "gogoproto/gogo.proto";
+import "reflexnet/inferencegateway/v1/inference.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/inferencegateway/types";
+
+// GenesisState defines the inferencegateway module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [(gogoproto.nullable) = false];
+  
+  // inference_requests is a list of all inference requests.
+  repeated InferenceRequest inference_requests = 2 [(gogoproto.nullable) = false];
+  
+  // inference_responses is a list of all inference responses.
+  repeated InferenceResponse inference_responses = 3 [(gogoproto.nullable) = false];
+}
+
+// Params defines the parameters for the inferencegateway module.
+message Params {
+  // max_request_size is the maximum size of inference input data.
+  uint64 max_request_size = 1;
+  
+  // request_timeout is the number of blocks before a request times out.
+  int64 request_timeout = 2;
+  
+  // proof_verification_enabled indicates if proof verification is required.
+  bool proof_verification_enabled = 3;
+  
+  // rate_limit_per_address is the maximum requests per address per block.
+  uint32 rate_limit_per_address = 4;
+}
+

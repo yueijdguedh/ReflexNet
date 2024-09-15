@@ -1,0 +1,85 @@
+syntax = "proto3";
+package reflexnet.inferencegateway.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/inferencegateway/types";
+
+// InferenceRequest represents a request for model inference.
+message InferenceRequest {
+  // request_id is a unique identifier for the inference request.
+  string request_id = 1;
+  
+  // model_id is the ID of the model to use for inference.
+  uint64 model_id = 2;
+  
+  // requester is the address of the requester.
+  string requester = 3;
+  
+  // input_data is the input data for the inference (could be IPFS CID).
+  string input_data = 4;
+  
+  // created_at is the block height when the request was created.
+  int64 created_at = 5;
+  
+  // status is the current status of the inference request.
+  InferenceStatus status = 6;
+  
+  // nonce is used for replay protection.
+  uint64 nonce = 7;
+}
+
+// InferenceResponse represents the response from an inference request.
+message InferenceResponse {
+  // request_id is the ID of the corresponding request.
+  string request_id = 1;
+  
+  // output_data is the inference result (could be IPFS CID).
+  string output_data = 2;
+  
+  // proof is the zkML proof for verification.
+  bytes proof = 3;
+  
+  // completed_at is the block height when the inference completed.
+  int64 completed_at = 4;
+  
+  // compute_units is the number of compute units consumed.
+  uint64 compute_units = 5;
+}
+
+// InferenceStatus defines the status of an inference request.
+enum InferenceStatus {
+  // INFERENCE_STATUS_UNSPECIFIED is the default status.
+  INFERENCE_STATUS_UNSPECIFIED = 0;
+  
+  // INFERENCE_STATUS_PENDING indicates the request is pending.
+  INFERENCE_STATUS_PENDING = 1;
+  
+  // INFERENCE_STATUS_PROCESSING indicates the request is being processed.
+  INFERENCE_STATUS_PROCESSING = 2;
+  
+  // INFERENCE_STATUS_COMPLETED indicates the request completed successfully.
+  INFERENCE_STATUS_COMPLETED = 3;
+  
+  // INFERENCE_STATUS_FAILED indicates the request failed.
+  INFERENCE_STATUS_FAILED = 4;
+  
+  // INFERENCE_STATUS_VERIFIED indicates the proof was verified.
+  INFERENCE_STATUS_VERIFIED = 5;
+}
+
+// ZKProof represents a zero-knowledge proof for inference verification.
+message ZKProof {
+  // proof_type identifies the type of proof system used.
+  string proof_type = 1;
+  
+  // proof_data is the actual proof bytes.
+  bytes proof_data = 2;
+  
+  // public_inputs are the public inputs to the proof.
+  repeated bytes public_inputs = 3;
+  
+  // verification_key_cid is the CID of the verification key.
+  string verification_key_cid = 4;
+}
+

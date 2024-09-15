@@ -1,0 +1,90 @@
+syntax = "proto3";
+package reflexnet.inferencegateway.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "reflexnet/inferencegateway/v1/inference.proto";
+import "reflexnet/inferencegateway/v1/genesis.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/inferencegateway/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/reflexnet/inferencegateway/v1/params";
+  }
+  
+  // InferenceRequest queries an inference request by ID.
+  rpc InferenceRequest(QueryInferenceRequestRequest) returns (QueryInferenceRequestResponse) {
+    option (google.api.http).get = "/reflexnet/inferencegateway/v1/requests/{request_id}";
+  }
+  
+  // InferenceResponse queries an inference response by request ID.
+  rpc InferenceResponse(QueryInferenceResponseRequest) returns (QueryInferenceResponseResponse) {
+    option (google.api.http).get = "/reflexnet/inferencegateway/v1/responses/{request_id}";
+  }
+  
+  // InferenceRequestsByRequester queries all inference requests by requester.
+  rpc InferenceRequestsByRequester(QueryInferenceRequestsByRequesterRequest) returns (QueryInferenceRequestsByRequesterResponse) {
+    option (google.api.http).get = "/reflexnet/inferencegateway/v1/requests/requester/{requester}";
+  }
+  
+  // AllInferenceRequests queries all inference requests.
+  rpc AllInferenceRequests(QueryAllInferenceRequestsRequest) returns (QueryAllInferenceRequestsResponse) {
+    option (google.api.http).get = "/reflexnet/inferencegateway/v1/requests";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryInferenceRequestRequest is the request type for the Query/InferenceRequest RPC method.
+message QueryInferenceRequestRequest {
+  string request_id = 1;
+}
+
+// QueryInferenceRequestResponse is the response type for the Query/InferenceRequest RPC method.
+message QueryInferenceRequestResponse {
+  InferenceRequest request = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryInferenceResponseRequest is the request type for the Query/InferenceResponse RPC method.
+message QueryInferenceResponseRequest {
+  string request_id = 1;
+}
+
+// QueryInferenceResponseResponse is the response type for the Query/InferenceResponse RPC method.
+message QueryInferenceResponseResponse {
+  InferenceResponse response = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryInferenceRequestsByRequesterRequest is the request type for the Query/InferenceRequestsByRequester RPC method.
+message QueryInferenceRequestsByRequesterRequest {
+  string requester = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryInferenceRequestsByRequesterResponse is the response type for the Query/InferenceRequestsByRequester RPC method.
+message QueryInferenceRequestsByRequesterResponse {
+  repeated InferenceRequest requests = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryAllInferenceRequestsRequest is the request type for the Query/AllInferenceRequests RPC method.
+message QueryAllInferenceRequestsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllInferenceRequestsResponse is the response type for the Query/AllInferenceRequests RPC method.
+message QueryAllInferenceRequestsResponse {
+  repeated InferenceRequest requests = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
