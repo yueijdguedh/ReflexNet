@@ -1,0 +1,53 @@
+syntax = "proto3";
+package reflexnet.billing.v1;
+
+import "gogoproto/gogo.proto";
+import "reflexnet/billing/v1/billing.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/billing/types";
+
+// GenesisState defines the billing module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [(gogoproto.nullable) = false];
+  
+  // billing_records is a list of all billing records.
+  repeated BillingRecord billing_records = 2 [(gogoproto.nullable) = false];
+  
+  // payment_distributions is a list of all payment distributions.
+  repeated PaymentDistribution payment_distributions = 3 [(gogoproto.nullable) = false];
+}
+
+// Params defines the parameters for the billing module.
+message Params {
+  // base_fee is the base fee for any inference request.
+  string base_fee = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // compute_unit_price is the price per compute unit.
+  string compute_unit_price = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  
+  // model_owner_share_percentage is the percentage of payment for model owner.
+  string model_owner_share_percentage = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  
+  // protocol_treasury_percentage is the percentage for protocol treasury.
+  string protocol_treasury_percentage = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  
+  // node_operator_share_percentage is the percentage for node operators.
+  string node_operator_share_percentage = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+}
+

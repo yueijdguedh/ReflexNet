@@ -1,0 +1,90 @@
+syntax = "proto3";
+package reflexnet.billing.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "reflexnet/billing/v1/billing.proto";
+import "reflexnet/billing/v1/genesis.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/billing/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/reflexnet/billing/v1/params";
+  }
+  
+  // BillingRecord queries a billing record by request ID.
+  rpc BillingRecord(QueryBillingRecordRequest) returns (QueryBillingRecordResponse) {
+    option (google.api.http).get = "/reflexnet/billing/v1/records/{request_id}";
+  }
+  
+  // BillingRecordsByRequester queries all billing records for a requester.
+  rpc BillingRecordsByRequester(QueryBillingRecordsByRequesterRequest) returns (QueryBillingRecordsByRequesterResponse) {
+    option (google.api.http).get = "/reflexnet/billing/v1/records/requester/{requester}";
+  }
+  
+  // PaymentDistribution queries a payment distribution by request ID.
+  rpc PaymentDistribution(QueryPaymentDistributionRequest) returns (QueryPaymentDistributionResponse) {
+    option (google.api.http).get = "/reflexnet/billing/v1/distributions/{request_id}";
+  }
+  
+  // AllBillingRecords queries all billing records.
+  rpc AllBillingRecords(QueryAllBillingRecordsRequest) returns (QueryAllBillingRecordsResponse) {
+    option (google.api.http).get = "/reflexnet/billing/v1/records";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryBillingRecordRequest is the request type for the Query/BillingRecord RPC method.
+message QueryBillingRecordRequest {
+  string request_id = 1;
+}
+
+// QueryBillingRecordResponse is the response type for the Query/BillingRecord RPC method.
+message QueryBillingRecordResponse {
+  BillingRecord record = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryBillingRecordsByRequesterRequest is the request type for the Query/BillingRecordsByRequester RPC method.
+message QueryBillingRecordsByRequesterRequest {
+  string requester = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryBillingRecordsByRequesterResponse is the response type for the Query/BillingRecordsByRequester RPC method.
+message QueryBillingRecordsByRequesterResponse {
+  repeated BillingRecord records = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryPaymentDistributionRequest is the request type for the Query/PaymentDistribution RPC method.
+message QueryPaymentDistributionRequest {
+  string request_id = 1;
+}
+
+// QueryPaymentDistributionResponse is the response type for the Query/PaymentDistribution RPC method.
+message QueryPaymentDistributionResponse {
+  PaymentDistribution distribution = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllBillingRecordsRequest is the request type for the Query/AllBillingRecords RPC method.
+message QueryAllBillingRecordsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllBillingRecordsResponse is the response type for the Query/AllBillingRecords RPC method.
+message QueryAllBillingRecordsResponse {
+  repeated BillingRecord records = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+

@@ -1,0 +1,100 @@
+syntax = "proto3";
+package reflexnet.billing.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/billing/types";
+
+// BillingRecord represents a billing record for an inference request.
+message BillingRecord {
+  // request_id is the ID of the inference request.
+  string request_id = 1;
+  
+  // model_id is the ID of the model used.
+  uint64 model_id = 2;
+  
+  // requester is the address that requested the inference.
+  string requester = 3;
+  
+  // total_cost is the total cost charged for the inference.
+  string total_cost = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // base_fee is the base fee component.
+  string base_fee = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // compute_fee is the compute fee component.
+  string compute_fee = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // compute_units is the number of compute units used.
+  uint64 compute_units = 7;
+  
+  // created_at is the block height when the billing record was created.
+  int64 created_at = 8;
+  
+  // payment_status indicates the payment status.
+  PaymentStatus payment_status = 9;
+}
+
+// PaymentDistribution represents how a payment is distributed.
+message PaymentDistribution {
+  // request_id is the ID of the inference request.
+  string request_id = 1;
+  
+  // model_owner_share is the share for the model owner.
+  string model_owner_share = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // model_owner is the address of the model owner.
+  string model_owner = 3;
+  
+  // node_shares maps node addresses to their share amounts.
+  repeated NodeShare node_shares = 4 [(gogoproto.nullable) = false];
+  
+  // protocol_treasury_share is the share for the protocol treasury.
+  string protocol_treasury_share = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // distributed_at is the block height when the payment was distributed.
+  int64 distributed_at = 6;
+}
+
+// NodeShare represents a node's share of payment.
+message NodeShare {
+  // node_address is the address of the node.
+  string node_address = 1;
+  
+  // share_amount is the amount to be paid to the node.
+  string share_amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// PaymentStatus defines the payment status of a billing record.
+enum PaymentStatus {
+  // PAYMENT_STATUS_UNSPECIFIED is the default status.
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  
+  // PAYMENT_STATUS_PENDING indicates payment is pending.
+  PAYMENT_STATUS_PENDING = 1;
+  
+  // PAYMENT_STATUS_COMPLETED indicates payment completed successfully.
+  PAYMENT_STATUS_COMPLETED = 2;
+  
+  // PAYMENT_STATUS_FAILED indicates payment failed.
+  PAYMENT_STATUS_FAILED = 3;
+}
+
