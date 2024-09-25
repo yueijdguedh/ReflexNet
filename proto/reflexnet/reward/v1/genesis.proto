@@ -1,0 +1,56 @@
+syntax = "proto3";
+package reflexnet.reward.v1;
+
+import "gogoproto/gogo.proto";
+import "reflexnet/reward/v1/reward.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/reward/types";
+
+// GenesisState defines the reward module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [(gogoproto.nullable) = false];
+  
+  // reward_pool is the current state of the reward pool.
+  RewardPool reward_pool = 2 [(gogoproto.nullable) = false];
+  
+  // node_rewards is a list of all node rewards.
+  repeated NodeReward node_rewards = 3 [(gogoproto.nullable) = false];
+  
+  // slashing_events is a list of all slashing events.
+  repeated SlashingEvent slashing_events = 4 [(gogoproto.nullable) = false];
+}
+
+// Params defines the parameters for the reward module.
+message Params {
+  // reward_distribution_interval is the number of blocks between reward distributions.
+  int64 reward_distribution_interval = 1;
+  
+  // base_reward_amount is the base reward amount per distribution period.
+  string base_reward_amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // performance_multiplier_enabled indicates if performance affects rewards.
+  bool performance_multiplier_enabled = 3;
+  
+  // slash_percentage_incorrect_proof is the percentage slashed for incorrect proofs.
+  string slash_percentage_incorrect_proof = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  
+  // slash_percentage_timeout is the percentage slashed for timeouts.
+  string slash_percentage_timeout = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  
+  // slash_percentage_unavailable is the percentage slashed for unavailability.
+  string slash_percentage_unavailable = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+}
+

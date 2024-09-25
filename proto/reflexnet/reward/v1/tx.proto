@@ -1,0 +1,72 @@
+syntax = "proto3";
+package reflexnet.reward.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/msg/v1/msg.proto";
+import "reflexnet/reward/v1/reward.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/reward/types";
+
+// Msg defines the reward Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  
+  // ClaimRewards claims accumulated rewards for a node.
+  rpc ClaimRewards(MsgClaimRewards) returns (MsgClaimRewardsResponse);
+  
+  // SlashNode slashes a node for misbehavior.
+  rpc SlashNode(MsgSlashNode) returns (MsgSlashNodeResponse);
+  
+  // DistributeRewards triggers reward distribution (authority only).
+  rpc DistributeRewards(MsgDistributeRewards) returns (MsgDistributeRewardsResponse);
+}
+
+// MsgClaimRewards is the message to claim accumulated rewards.
+message MsgClaimRewards {
+  option (cosmos.msg.v1.signer) = "node_address";
+  
+  string node_address = 1;
+}
+
+// MsgClaimRewardsResponse is the response for MsgClaimRewards.
+message MsgClaimRewardsResponse {
+  string claimed_amount = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// MsgSlashNode is the message to slash a node.
+message MsgSlashNode {
+  option (cosmos.msg.v1.signer) = "authority";
+  
+  string authority = 1;
+  string node_address = 2;
+  SlashingReason reason = 3;
+  string evidence = 4;
+}
+
+// MsgSlashNodeResponse is the response for MsgSlashNode.
+message MsgSlashNodeResponse {
+  string slashed_amount = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// MsgDistributeRewards is the message to trigger reward distribution.
+message MsgDistributeRewards {
+  option (cosmos.msg.v1.signer) = "authority";
+  
+  string authority = 1;
+}
+
+// MsgDistributeRewardsResponse is the response for MsgDistributeRewards.
+message MsgDistributeRewardsResponse {
+  string total_distributed = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint32 nodes_rewarded = 2;
+}
+

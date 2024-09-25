@@ -1,0 +1,106 @@
+syntax = "proto3";
+package reflexnet.reward.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/reward/types";
+
+// RewardPool represents the reward pool for node operators.
+message RewardPool {
+  // total_rewards is the total rewards available in the pool.
+  string total_rewards = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // distributed_rewards is the total rewards already distributed.
+  string distributed_rewards = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // last_distribution_height is the last block height when rewards were distributed.
+  int64 last_distribution_height = 3;
+}
+
+// NodeReward represents rewards for a specific node.
+message NodeReward {
+  // node_address is the address of the node.
+  string node_address = 1;
+  
+  // accumulated_rewards is the total rewards accumulated by the node.
+  string accumulated_rewards = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // claimed_rewards is the total rewards already claimed by the node.
+  string claimed_rewards = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // last_claim_height is the last block height when rewards were claimed.
+  int64 last_claim_height = 4;
+  
+  // performance_metrics tracks the node's performance.
+  PerformanceMetrics performance_metrics = 5 [(gogoproto.nullable) = false];
+}
+
+// PerformanceMetrics tracks node performance for reward calculation.
+message PerformanceMetrics {
+  // successful_inferences is the number of successful inferences.
+  uint64 successful_inferences = 1;
+  
+  // failed_inferences is the number of failed inferences.
+  uint64 failed_inferences = 2;
+  
+  // total_uptime_blocks is the total number of blocks the node was online.
+  int64 total_uptime_blocks = 3;
+  
+  // last_active_block is the last block height when the node was active.
+  int64 last_active_block = 4;
+  
+  // average_response_time is the average response time in milliseconds.
+  uint64 average_response_time = 5;
+}
+
+// SlashingEvent represents a slashing event for a node.
+message SlashingEvent {
+  // node_address is the address of the slashed node.
+  string node_address = 1;
+  
+  // slash_amount is the amount of tokens slashed.
+  string slash_amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  
+  // reason is the reason for slashing.
+  SlashingReason reason = 3;
+  
+  // slashed_at is the block height when the node was slashed.
+  int64 slashed_at = 4;
+  
+  // evidence is additional evidence for the slashing.
+  string evidence = 5;
+}
+
+// SlashingReason defines reasons for slashing.
+enum SlashingReason {
+  // SLASHING_REASON_UNSPECIFIED is the default reason.
+  SLASHING_REASON_UNSPECIFIED = 0;
+  
+  // SLASHING_REASON_INCORRECT_PROOF indicates an incorrect zkML proof.
+  SLASHING_REASON_INCORRECT_PROOF = 1;
+  
+  // SLASHING_REASON_TIMEOUT indicates a timeout in responding.
+  SLASHING_REASON_TIMEOUT = 2;
+  
+  // SLASHING_REASON_UNAVAILABLE indicates the node was unavailable.
+  SLASHING_REASON_UNAVAILABLE = 3;
+  
+  // SLASHING_REASON_MALICIOUS_BEHAVIOR indicates detected malicious behavior.
+  SLASHING_REASON_MALICIOUS_BEHAVIOR = 4;
+}
+

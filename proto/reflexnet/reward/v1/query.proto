@@ -1,0 +1,88 @@
+syntax = "proto3";
+package reflexnet.reward.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "reflexnet/reward/v1/reward.proto";
+import "reflexnet/reward/v1/genesis.proto";
+
+option go_package = "github.com/yueijdguedh/ReflexNet/x/reward/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/reflexnet/reward/v1/params";
+  }
+  
+  // RewardPool queries the current reward pool state.
+  rpc RewardPool(QueryRewardPoolRequest) returns (QueryRewardPoolResponse) {
+    option (google.api.http).get = "/reflexnet/reward/v1/pool";
+  }
+  
+  // NodeReward queries rewards for a specific node.
+  rpc NodeReward(QueryNodeRewardRequest) returns (QueryNodeRewardResponse) {
+    option (google.api.http).get = "/reflexnet/reward/v1/rewards/{node_address}";
+  }
+  
+  // AllNodeRewards queries all node rewards.
+  rpc AllNodeRewards(QueryAllNodeRewardsRequest) returns (QueryAllNodeRewardsResponse) {
+    option (google.api.http).get = "/reflexnet/reward/v1/rewards";
+  }
+  
+  // SlashingEvents queries slashing events for a node.
+  rpc SlashingEvents(QuerySlashingEventsRequest) returns (QuerySlashingEventsResponse) {
+    option (google.api.http).get = "/reflexnet/reward/v1/slashing/{node_address}";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryRewardPoolRequest is the request type for the Query/RewardPool RPC method.
+message QueryRewardPoolRequest {}
+
+// QueryRewardPoolResponse is the response type for the Query/RewardPool RPC method.
+message QueryRewardPoolResponse {
+  RewardPool pool = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryNodeRewardRequest is the request type for the Query/NodeReward RPC method.
+message QueryNodeRewardRequest {
+  string node_address = 1;
+}
+
+// QueryNodeRewardResponse is the response type for the Query/NodeReward RPC method.
+message QueryNodeRewardResponse {
+  NodeReward reward = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllNodeRewardsRequest is the request type for the Query/AllNodeRewards RPC method.
+message QueryAllNodeRewardsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllNodeRewardsResponse is the response type for the Query/AllNodeRewards RPC method.
+message QueryAllNodeRewardsResponse {
+  repeated NodeReward rewards = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QuerySlashingEventsRequest is the request type for the Query/SlashingEvents RPC method.
+message QuerySlashingEventsRequest {
+  string node_address = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QuerySlashingEventsResponse is the response type for the Query/SlashingEvents RPC method.
+message QuerySlashingEventsResponse {
+  repeated SlashingEvent events = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
